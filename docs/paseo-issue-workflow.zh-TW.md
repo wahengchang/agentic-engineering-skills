@@ -8,6 +8,10 @@
 
 [Paseo](https://paseo.sh/docs/why) 是這類環境的一個實作。它整合 Agent 對話、編輯器、Terminal、Diff 與桌面瀏覽器，也能管理多個任務的工作空間。
 
+![Paseo ADE 工作區：桌面工作區清單、Agent 對話、程式碼 Diff，以及手機端工作區；桌面示例名稱為 Paseo hub dashboard MVP](images/paseo-ade-annotated-cover.png)
+
+*Paseo 的 ADE 工作區示例：桌面端整合工作區清單、Agent 對話與程式碼 Diff；手機端也可查看工作區。桌面與手機為不同官方示例畫面。圖片來源：[Paseo 官方桌面素材](https://github.com/getpaseo/paseo/blob/main/packages/website/public/homepage-hero.png)／[手機素材](https://github.com/getpaseo/paseo/blob/main/packages/website/public/phone-1.png)，[Apache-2.0](https://github.com/getpaseo/paseo/blob/main/LICENSE)；合成與中文標註。*
+
 在這個工作方式中，開發者仍然決定任務範圍、檢查結果與是否接受修改；Agent 則在可用的工具與權限內執行。ADE 把這些操作放在同一個可管理的環境，讓人能找到任務的程式碼、對話和測試結果。
 
 先區分三個概念：**Project** 對應專案；**Workspace** 是任務的工作空間，可使用獨立 branch／worktree 隔離修改；**Agent Session** 是在該空間中執行工作的 Agent 對話。多個 Session 可以在同一個 Workspace 協作，但需要約定誰能修改哪些檔案。
