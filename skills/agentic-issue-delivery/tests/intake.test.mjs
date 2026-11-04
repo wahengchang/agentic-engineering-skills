@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { chooseIssue,parseDuration,modeIsBroad } from '../scripts/intake-lib.mjs';
+const issue=(number,labels=['paseo'],state='OPEN',author='example-user')=>({number,url:`https://github.com/example/project/issues/${number}`,labels:labels.map(name=>({name})),state,author:{login:author}});
+test('idle queue never produces a dispatch',()=>assert.deepEqual(chooseIssue({issues:[],boundary:100,author:'example-user',active:null}),{kind:'idle'}));
+test('boundary excludes old issues',()=>assert.equal(chooseIssue({issues:[issue(100)],boundary:100,author:'example-user',active:null}).kind,'idle'));
+test('author restricts intake',()=>assert.equal(chooseIssue({issues:[issue(101,['paseo'],'OPEN','other')],boundary:100,author:'example-user',active:null}).kind,'idle'));
+test('label restricts intake',()=>assert.equal(chooseIssue({issues:[issue(101,['bug'])],boundary:100,author:'example-user',active:null}).kind,'idle'));
+test('closed issue is ignored',()=>assert.equal(chooseIssue({issues:[issue(101,['paseo'],'CLOSED')],boundary:100,author:'example-user',active:null}).kind,'idle'));
+test('dispatch chooses oldest eligible issue',()=>assert.equal(chooseIssue({issues:[issue(108),issue(102),issue(101,['bug'])],boundary:100,author:'example-user',active:null}).issue,102));
+test('unreconciled activity prevents second dispatch',()=>assert.equal(chooseIssue({issues:[issue(102)],boundary:100,author:'example-user',active:{state:'dispatch-unknown'}}).kind,'busy'));
+test('duration parser validates minimum',()=>{assert.equal(parseDuration('10m'),600000); assert.throws(()=>parseDuration('1s'));assert.throws(()=>parseDuration('abc'));});
+test('unrestricted modes are explicit opt-in',()=>{assert.equal(modeIsBroad('full-access'),true);assert.equal(modeIsBroad('bypassPermissions'),true);assert.equal(modeIsBroad('auto-review'),false);});

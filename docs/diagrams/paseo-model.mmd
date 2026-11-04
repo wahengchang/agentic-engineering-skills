@@ -1,0 +1,8 @@
+flowchart TB
+  P[Project: Git Repository]
+  P --> W1[Workspace: Issue 42 / worktree]
+  P --> W2[Workspace: Issue 43 / separate worktree]
+  W1 --> C[Coordinator session]
+  W1 --> B[Builder session]
+  W1 --> R[Reviewer session]
+  W2 --> O[Other agent sessions]

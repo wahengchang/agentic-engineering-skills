@@ -1,0 +1,10 @@
+{
+  "name": "agentic-issue-delivery-skill",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Portable AI engineering workflow skill and optional foreground intake",
+  "scripts": { "test": "node --test tests/*.test.mjs" },
+  "engines": { "node": ">=22" },
+  "license": "MIT"
+}
