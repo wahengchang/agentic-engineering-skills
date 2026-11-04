@@ -20,7 +20,7 @@ npx skills add ./agentic-engineering-skills --skill agentic-issue-delivery
 
 `npx skills add` installs a skill; it does **not** automatically start a background poller.
 
-繁體中文介紹與使用指南：[我替 Paseo 裝了一位 AI 工程主管](docs/paseo-issue-workflow.zh-TW.md)。
+[Read the Substack article](https://ppchang.substack.com/p/paseo-ai-github-issue-pr-skill) · 繁體中文介紹與使用指南：[我替 Paseo 裝了一位 AI 工程主管](docs/paseo-issue-workflow.zh-TW.md)。
 
 ## Compatibility
 
