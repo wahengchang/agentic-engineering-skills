@@ -1,0 +1,14 @@
+stateDiagram-v2
+    state "無 active.json" as None
+    state "dispatch-unknown" as Unknown
+    state "dispatched" as Sent
+    None --> Unknown: writeAtomic intent
+    Unknown --> Unknown: timeout / 無法解析 ID
+    Unknown --> Sent: 可解析 agentId
+    Unknown --> Sent: 人工核對原 Session / reconcile agent confirmed
+    Unknown --> None: 人工核對 / reconcile done confirmed
+    Sent --> None: 人工核對 / reconcile done confirmed
+    note right of None
+      沒有 completed 清單。
+      同一張仍 OPEN 的票可能再次被選到。
+    end note

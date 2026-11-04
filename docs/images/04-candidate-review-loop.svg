@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1420" viewBox="0 0 1100 1420" role="img" aria-label="交付 loop：候選版本與證據一起流動">
+<title>交付 loop：候選版本與證據一起流動</title>
+<rect width="1100" height="1420" fill="white"/>
+<text x="48" y="42" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="18" font-weight="600" fill="#2457c5">04  /  Skill 交接契約</text>
+<text x="48" y="91" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="36" font-weight="600" fill="#202b3b">交付 loop：候選版本與證據一起流動</text>
+<text x="48" y="137" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">以下是 Skill 的交接契約，由 Coordinator 核對；不是程式強制狀態機。</text>
+<line x1="48" y1="170" x2="1052" y2="170" stroke="#c7d0dd" stroke-width="1.4" />
+<rect x="250" y="215" width="600" height="118" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="272" y="247" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">Intake · Coordinator</text>
+<text x="272" y="281" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">Issue / repo / base / 現有工作</text>
+<text x="272" y="313" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">SKILL.md · phase order</text>
+<rect x="250" y="390" width="600" height="118" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="272" y="422" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">Plan · Planner</text>
+<text x="272" y="456" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">輸出：plan path + acceptance</text>
+<text x="272" y="488" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">actions/plan.md</text>
+<rect x="250" y="565" width="600" height="118" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="272" y="597" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">Build · 原 Builder</text>
+<text x="272" y="631" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">輸出：candidate SHA + changed files</text>
+<text x="272" y="663" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">actions/build.md</text>
+<rect x="250" y="760" width="600" height="118" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="272" y="792" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">Verify · 原 Builder</text>
+<text x="272" y="826" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">輸出：SHA + commands / exits / evidence</text>
+<text x="272" y="858" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">actions/verify.md</text>
+<rect x="250" y="955" width="600" height="118" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="272" y="987" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">Review · 獨立 Reviewer</text>
+<text x="272" y="1021" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">輸出：SHA + verdict + findings</text>
+<text x="272" y="1053" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">actions/review.md</text>
+<rect x="250" y="1160" width="600" height="118" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="272" y="1192" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">Publish · Coordinator</text>
+<text x="272" y="1226" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">讀回：base / head / draft / SHA</text>
+<text x="272" y="1258" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">git push + gh PR；依 SKILL.md</text>
+<polyline points="550,333 550,390" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="550,390 554.8,380.0 545.2,380.0" fill="#2457c5"/>
+<polyline points="550,508 550,565" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="550,565 554.8,555.0 545.2,555.0" fill="#2457c5"/>
+<polyline points="550,683 550,760" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="550,760 554.8,750.0 545.2,750.0" fill="#2457c5"/>
+<polyline points="550,878 550,955" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="550,955 554.8,945.0 545.2,945.0" fill="#2457c5"/>
+<text x="570" y="916.5" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#2457c5">通過／同一 SHA</text>
+<polyline points="550,1073 550,1160" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="550,1160 554.8,1150.0 545.2,1150.0" fill="#2457c5"/>
+<text x="570" y="1116.5" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#2457c5">通過／同一 SHA</text>
+<polyline points="250,819 100,819 100,624 250,624" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" />
+<polygon points="250,624 240.0,619.2 240.0,628.8" fill="#566477"/>
+<text x="120" y="700" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">驗證失敗</text>
+<polyline points="850,1014 1000,1014 1000,624 850,624" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" />
+<polygon points="850,624 860.0,628.8 860.0,619.2" fill="#566477"/>
+<text x="872" y="704" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="19" font-weight="400" fill="#202b3b">changes-</text>
+<text x="872" y="735" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="19" font-weight="400" fill="#202b3b">requested</text>
+<text x="872" y="815" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">交回原</text>
+<text x="872" y="845" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">Builder</text>
+<line x1="48" y1="1320" x2="1052" y2="1320" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="48" y="1353" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#566477">新 SHA → 重做受影響的 Verify / Review；progress.md 保存交接與回執。預設不合併。</text>
+<text x="48" y="1386" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="18" font-weight="400" fill="#566477">SKILL.md:20–31; actions/{plan,build,verify,review}.md</text>
+</svg>

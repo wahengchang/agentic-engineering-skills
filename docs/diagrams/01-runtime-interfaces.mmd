@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant G as GitHub CLI
+    participant I as issue-intake.mjs
+    participant P as Paseo CLI / host
+    participant C as Coordinator
+    I->>G: fetchIssues(config) → gh issue list
+    G-->>I: Issue[] JSON
+    Note over I: chooseIssue(input) → dispatch
+    Note over I: writeAtomic(activeFile, intent)
+    I->>P: call("paseo", argv)
+    P->>C: 啟動 Agent Session
+    P-->>I: raw JSON → agentId
+    Note over C: SKILL.md / actions / references 為指令依賴

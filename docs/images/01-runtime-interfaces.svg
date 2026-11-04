@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1160" viewBox="0 0 1100 1160" role="img" aria-label="執行介面：Issue 如何交給 Paseo">
+<title>執行介面：Issue 如何交給 Paseo</title>
+<rect width="1100" height="1160" fill="white"/>
+<text x="48" y="42" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="18" font-weight="600" fill="#2457c5">01  /  介面關係</text>
+<text x="48" y="91" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="36" font-weight="600" fill="#202b3b">執行介面：Issue 如何交給 Paseo</text>
+<text x="48" y="137" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">請求、回傳與指令依賴分開畫；接件器是可選入口。</text>
+<line x1="48" y1="170" x2="1052" y2="170" stroke="#c7d0dd" stroke-width="1.4" />
+<rect x="30" y="210" width="220" height="95" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="140" y="240" dominant-baseline="central" text-anchor="middle" font-family="PingFang TC, sans-serif" font-size="23" font-weight="600" fill="#202b3b">GitHub CLI</text>
+<text x="140" y="276" dominant-baseline="central" text-anchor="middle" font-family="Menlo, PingFang TC, sans-serif" font-size="19" font-weight="400" fill="#202b3b">gh</text>
+<line x1="140" y1="305" x2="140" y2="920" stroke="#c7d0dd" stroke-width="1.4" stroke-dasharray="6 6"/>
+<rect x="300" y="210" width="220" height="95" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="410" y="240" dominant-baseline="central" text-anchor="middle" font-family="PingFang TC, sans-serif" font-size="23" font-weight="600" fill="#202b3b">接件腳本</text>
+<text x="410" y="276" dominant-baseline="central" text-anchor="middle" font-family="Menlo, PingFang TC, sans-serif" font-size="19" font-weight="400" fill="#202b3b">issue-intake.mjs</text>
+<line x1="410" y1="305" x2="410" y2="920" stroke="#c7d0dd" stroke-width="1.4" stroke-dasharray="6 6"/>
+<rect x="575" y="210" width="220" height="95" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="685" y="240" dominant-baseline="central" text-anchor="middle" font-family="PingFang TC, sans-serif" font-size="23" font-weight="600" fill="#202b3b">Paseo CLI / host</text>
+<text x="685" y="276" dominant-baseline="central" text-anchor="middle" font-family="Menlo, PingFang TC, sans-serif" font-size="19" font-weight="400" fill="#202b3b">paseo run</text>
+<line x1="685" y1="305" x2="685" y2="920" stroke="#c7d0dd" stroke-width="1.4" stroke-dasharray="6 6"/>
+<rect x="855" y="210" width="220" height="95" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="965" y="240" dominant-baseline="central" text-anchor="middle" font-family="PingFang TC, sans-serif" font-size="23" font-weight="600" fill="#202b3b">Coordinator</text>
+<text x="965" y="276" dominant-baseline="central" text-anchor="middle" font-family="Menlo, PingFang TC, sans-serif" font-size="19" font-weight="400" fill="#202b3b">Agent Session</text>
+<line x1="965" y1="305" x2="965" y2="920" stroke="#c7d0dd" stroke-width="1.4" stroke-dasharray="6 6"/>
+<polyline points="410,365 140,365" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="140,365 150.0,369.8 150.0,360.2" fill="#2457c5"/>
+<text x="175" y="339" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">fetchIssues(config)</text>
+<polyline points="140,435 410,435" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 6"/>
+<polygon points="410,435 400.0,430.2 400.0,439.8" fill="#566477"/>
+<text x="175" y="411" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">Issue[]（JSON）</text>
+<rect x="300" y="478" width="220" height="80" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="410" y="502" dominant-baseline="central" text-anchor="middle" font-family="Menlo, PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">chooseIssue(input)</text>
+<text x="410" y="536" dominant-baseline="central" text-anchor="middle" font-family="PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">dispatch 才繼續</text>
+<polyline points="410,605 685,605" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="685,605 675.0,600.2 675.0,609.8" fill="#2457c5"/>
+<text x="438" y="581" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="19" font-weight="400" fill="#202b3b">call(&quot;paseo&quot;, argv)</text>
+<polyline points="685,668 965,668" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="965,668 955.0,663.2 955.0,672.8" fill="#2457c5"/>
+<text x="725" y="643" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">啟動對應 Agent</text>
+<polyline points="685,742 410,742" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 6"/>
+<polygon points="410,742 420.0,746.8 420.0,737.2" fill="#566477"/>
+<text x="446" y="717" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">raw JSON → agentId</text>
+<rect x="780" y="805" width="290" height="84" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" stroke-dasharray="7 5"/>
+<text x="925" y="834" dominant-baseline="central" text-anchor="middle" font-family="Menlo, PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">SKILL.md / actions /</text>
+<text x="925" y="865" dominant-baseline="central" text-anchor="middle" font-family="Menlo, PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">references</text>
+<polyline points="965,805 965,775" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 6"/>
+<polygon points="965,775 960.2,785.0 969.8,785.0" fill="#566477"/>
+<text x="798" y="773" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#566477">指令依賴</text>
+<rect x="48" y="955" width="1004" height="100" rx="5" fill="#f5f8fc" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="70" y="983" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#202b3b">argv：--workspace ID --provider VALUE --mode MODE</text>
+<text x="70" y="1020" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#202b3b">      --title issue-N-coord --no-wait --json PROMPT</text>
+<line x1="48" y1="1080" x2="1052" y2="1080" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="48" y="1113" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#566477">實線：呼叫／啟動　虛線：回傳／指令；手動模式直接把 Issue URL 交給 Coordinator。</text>
+<text x="48" y="1146" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="18" font-weight="400" fill="#566477">issue-intake.mjs:54–79</text>
+</svg>

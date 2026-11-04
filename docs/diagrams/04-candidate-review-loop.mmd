@@ -1,0 +1,8 @@
+flowchart TD
+    I[Intake / Coordinator] --> P[Plan / Planner / plan path + acceptance]
+    P --> B[Build / 原 Builder / candidate SHA]
+    B --> V[Verify / 原 Builder / SHA + commands + exits + evidence]
+    V -->|通過且同一 SHA| R[Review / 獨立 Reviewer / verdict + findings]
+    V -->|驗證失敗| B
+    R -->|changes-requested| B
+    R -->|通過且同一 SHA| D[Publish / Coordinator / PR base + head + draft + SHA]

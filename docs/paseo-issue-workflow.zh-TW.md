@@ -1,187 +1,126 @@
-# 我替 Paseo 裝了一位 AI 工程主管：從 GitHub Issue 到 PR 的可安裝 Skill
+# 從 ADE 到 Issue → PR：Paseo 工程工作流程的架構與實作
 
-**副標題：** 一套可以帶到不同 GitHub 專案的 Paseo 工作流程：自動接件、Plan／Build／Verify／Review、失敗接續，以及有條件的 PR 交付。
+一套安裝到 Coding Agent 的工程流程：從執行環境、元件分工，到固定版本驗證與 Draft PR 交付。
 
-*這是一篇實作筆記，也是一份讀者可以照著操作的使用指南；不是 Paseo 官方功能公告。*
+## 一、什麼是 ADE？
 
-![封面：GitHub 工作單經由 Paseo 協調多個專職 Agent，最後交付 PR](images/01-cover.png)
+**ADE 是 Agentic Development Environment，讓 Coding Agent 執行開發任務的工作環境。** 以修正登入頁面為例：開發者提出需求，Agent 讀取程式碼、修改檔案、透過 Terminal 跑測試，再由開發者查看 Diff 和執行結果。這些工作需要檔案、Git、執行工具與可持續追蹤的對話。
 
-我想解決一個很具體的問題：**如果我在 GitHub 開好一張 Issue，可不可以讓 Paseo 裡的 Coding Agent 把它接下來，自己完成規劃、寫程式、跑測試、接受另一個 Agent 的審查，最後交回一個我能審閱的 PR？**
+[Paseo](https://paseo.sh/docs/why) 是這類環境的一個實作。它整合 Agent 對話、編輯器、Terminal、Diff 與桌面瀏覽器，也能管理多個任務的工作空間。
 
-我不是要另一個「幫我寫 code」的聊天機器人。我要的是一位**懂得交接、知道何時停下來，而且不會因為一次 timeout 就開兩份 PR 的 AI 工程主管**。
+在這個工作方式中，開發者仍然決定任務範圍、檢查結果與是否接受修改；Agent 則在可用的工具與權限內執行。ADE 把這些操作放在同一個可管理的環境，讓人能找到任務的程式碼、對話和測試結果。
 
-最近我沿著四輪 Pull Request，把這件事拆成了可以重複安裝的 Skill。它以 **Paseo** 為執行環境，以 **GitHub Issue** 為任務入口，以 **Draft PR** 為公開版預設出口。最重要的是：**讀者不必複製我的原始業務專案，也能拿到這套流程的設定、角色指令、進度規則與可選接件器。**
+先區分三個概念：**Project** 對應專案；**Workspace** 是任務的工作空間，可使用獨立 branch／worktree 隔離修改；**Agent Session** 是在該空間中執行工作的 Agent 對話。多個 Session 可以在同一個 Workspace 協作，但需要約定誰能修改哪些檔案。
 
-不過先說清楚：**Skill 已可安裝、文件和離線測試可使用；可選的前景接件工具是離線測試過的公開版原型，尚未在你的 Paseo 主機上做端到端實測。** 安裝 Skill ≠ 立刻啟用 unattended AI，更不等於直接自動合併。
+Paseo 透過 **provider** 接入已安裝、已登入的 Coding Agent CLI，例如 Codex 或 Claude Code。Provider 定義啟動、輸入、輸出與執行模式的介面；實際 CLI 在執行主機上運作。模型推論是否使用雲端服務，則取決於 provider 的設定。[Provider 文件](https://paseo.sh/docs/providers)
 
-## 一、這到底是什麼？先看成品，而不是術語
+## 二、這個專案加了什麼？
 
-這個專案是一套面向 Paseo 的 **Issue-to-PR Engineering Skill**。它把一張 Issue 變成有階段、有責任人、有證據的工作，而不是一段聊天。
+[agentic-engineering-skills](https://github.com/wahengchang/agentic-engineering-skills) 提供一個名為 `agentic-issue-delivery` 的 Skill，目標是讓指定的 GitHub Issue 經過規劃、實作、驗證與審查，交回可供人工檢查的 Draft PR。
 
-| 你原本需要親自做的事 | 這套 Skill 替你規範／協調的事 |
-| --- | --- |
-| 反覆把 Issue 貼給 Agent | 讀取指定 Issue，核對 repo、需求與既有工作 |
-| 提醒 Agent 先想再改 | 將 **Plan** 與 **Build** 分開，定義交接文件 |
-| 問「你測過了嗎？」 | 對固定 commit SHA 產生 **Verify** 證據 |
-| 再開一個聊天找人 Code Review | 交給新 context、不同模型家族的 **Review**（如可用） |
-| Agent 卡住後不知道從哪裡接 | 維護 `progress.md`，重新核對 Git／Paseo／GitHub 後接續 |
-| 擔心 Agent 直接 merge | 預設停在**未合併的 Draft PR**；升級權限必須另有條件 |
+專案內容分成三部分：
 
-圖示如下。這不是 Paseo 的官方內建畫面，而是此 Skill 的工作模型。
+- **`SKILL.md`**：定義 Coordinator 的工作順序、完成條件、角色分工與失敗接續規則。
+- **`actions/` 與 `references/`**：提供各階段指令、交接格式、進度紀錄與權限判斷依據。
+- **`scripts/issue-intake.mjs`**：可選的 Node 接件腳本，查詢 GitHub Issue，將符合條件的工作派給 Paseo。
 
-![Paseo 工作流程架構圖](images/02-architecture.png)
+例如，一張要求修改表單提示文字的 Issue，除了程式碼 diff，還需要能對照原需求的驗收條件、候選版本與審查結果。Skill 將這些要求寫成可重複使用的指令，讓每次處理任務時都有相同的交接依據。
 
-若把它想像成一個小團隊，**Coordinator 是工程主管**：Planner 負責規劃、Builder 負責程式碼、Verifier 在固定版本上檢查、Reviewer 提供第二意見。這些不是四個可以任意互改檔案的機器人；每個角色有不同寫入範圍，而且 **Verify 由原本的 Builder 執行，不一定需要額外開一個 Agent**。
+前兩部分是讓 Agent 讀取的指令文件。它們要求 Agent 遵循流程，並沒有實作一個強制控制每次轉換的工作流引擎。角色的寫入界線仍須搭配執行工具的權限與 repository protection。
 
-這套設計不會提升模型的 IQ。它改善的是**誰負責、什麼時候能往下走、什麼結果可視為完成**。
+如果專案有自己的規劃、建置或驗證步驟，可以提供對應階段的 action 覆寫文件。文件必須包含執行前核對、工作指令與交付項目，讓 Coordinator 知道交接條件；缺少必要段落時要停止處理，不能略過。專案設定也不能取消固定版本驗證或獨立審查的完成要求。
 
-## 二、為什麼選 Paseo？ADE 與 Skill 各管一層
+接件腳本則有具體的判斷與狀態檔。安裝 Skill 只讓 Coding Agent 看得到這些內容；不會啟動接件、建立排程或授予合併權限。
 
-Paseo 將自己定位成 **Agentic Development Environment（ADE）**。它不是自己發明一個 Coding Model；它把你已安裝並登入的 Codex、Claude Code、OpenCode 等 Coding Agent 放進一套可管理的開發環境，提供 Project、Workspace、Session、Terminal、Diff 和跨裝置操作等能力。
+## 三、系統的大架構
 
-初次接觸這三個名詞，可以用這個方法理解：
+這裡先看元件如何連接，再看階段怎麼推進。Workspace 決定工作在哪裡執行；角色決定各個 Session 負責什麼；進度文件讓下一次接續時有可核對的紀錄。建立多個 Session 本身，不會自動得到這些分工。
 
-- **Project**：一個程式碼專案，例如一個 Git repository。
-- **Workspace**：某張任務的工作空間；可以用獨立 Git worktree／branch 隔離修改。
-- **Agent / Session**：在這個 workspace 裡執行具體工作的 AI 對話或執行單元。
+任務有兩種入口，最後都交給 Coordinator：
 
-![Paseo Project、Workspace 與 Agent 的關係](images/03-paseo-model.png)
+**手動入口**是直接把 Issue URL 交給 Paseo 裡的 Agent，要求使用這個 Skill。首次使用走這條路，就能先核對需求、工作空間與交付結果。
 
-Paseo 官方已經支援 Orchestration、Subagents、Skills 與 CLI；**這個專案不是取代它們，而是利用這些能力，補上一套專為 GitHub Issue 交付設計的工作規則**。官方 `/paseo`、`/paseo-handoff`、`/paseo-advisor` 是另一組 Skill；這裡介紹的 `agentic-issue-delivery` 是獨立的自訂 Skill。
+**可選自動入口**是由前景接件腳本透過 `gh` 查詢 Issue。它只挑選編號大於初始化 boundary、指定作者建立、帶有確切 `paseo` label 的開放 Issue。沒有符合條件的票，就不派出新 Agent；有未解除的 `active.json`，則暫停後續派工。
 
-*延伸來源：[Paseo 官方介紹](https://paseo.sh/docs/why) · [Worktrees](https://paseo.sh/docs/worktrees) · [Orchestration Skills](https://paseo.sh/docs/skills)*
+腳本使用預先設定的 Workspace 與 provider 呼叫 `paseo run`。它不會替每張 Issue 自動建立隔離空間，因此必須先確認 Workspace 對應正確的 repository。
 
-## 三、讀者可以怎麼開始？先走最簡單的一條路
+![執行介面：fetchIssues、chooseIssue、Paseo CLI 與 Coordinator 的呼叫和回傳](images/01-runtime-interfaces.png)
 
-**最推薦的首次使用方式是「手動指定一張 Issue → 讓 Paseo Agent 依 Skill 工作」**。這樣你能先確認本機環境、角色分工和結果，而不是一開始就打開自動接件器。
+*介面圖：接件器透過 CLI 派工；Paseo 回傳的是 Session 回執，工程完成與否需另外核對。*
 
-你需要：Paseo 桌面版或 CLI；已安裝／登入的 Coding Agent；一個有寫入權限的 Git repository；若要讀寫 GitHub Issue／PR，再準備已登入的 `gh`。Paseo 本身不會附帶替你登入的 Coding Agent CLI。
+核心呼叫順序是 `dispatchOnce(config)` 先以 `assertRepo()` 核對環境，再用 `fetchIssues()` 取得資料，交給純函數 `chooseIssue({issues, boundary, author, active})`。它回傳 `busy`、`idle` 或 `dispatch`；只有最後一種會執行 `call("paseo", argv)`。派工前先以 `writeAtomic()` 保存意圖。
 
-先在目標 repository 裡核對：
+![接件 loop：dispatchOnce、chooseIssue 的分支與 while running 返回路徑](images/02-intake-loop.png)
 
-```bash
-node --version
-gh auth status
-paseo status --json
-paseo workspace ls --json
-paseo provider ls --json
-```
+*輪詢圖：`main()` 的 start 分支以 `withAsyncLock()` 取得 owner.lock，再執行輪詢。busy 也會先查 GitHub；環境核對或查詢出錯會退出 loop。*
 
-接著，**從 [公開 GitHub Repository](https://github.com/wahengchang/agentic-engineering-skills) 安裝這份 Skill**，在目標 repository 執行：
+**Coordinator** 是目前負責整張 Issue 的 Agent：讀取 Skill、派工、收集證據、維護 `progress.md`，最後透過 Git 推送候選，再使用 `gh` 建立或重用 Draft PR。Planner 負責計畫；Builder 負責產品程式與驗證；Reviewer 負責獨立審查，只寫審查報告。
+
+GitHub 保存需求與 PR；Paseo 管理執行中的 Agent 與 Workspace；Skill 定義工作規則。本專案的接件器是自訂原型。Paseo 官方另有 [Hub](https://paseo.sh/docs/hub) 處理外部事件觸發，不屬於這個腳本的實作。
+
+## 四、一張 Issue 如何變成 Draft PR？
+
+以下是 Skill 要求的處理順序，由 Coordinator 核對各階段產出後繼續。每次交接都要帶上原需求、工作範圍、使用的 Workspace，以及預期報告位置；涉及候選時還要附上 SHA。接手的角色先確認檔案可讀，再開始工作。
+
+**1. Intake：確認要做的事。** Coordinator 讀取 Issue、採納的留言與專案指令，核對 repository、base branch、權限及現有 Workspace／PR。需求或權限不清楚時先記錄阻礙，不建立重複工作。
+
+**2. Plan：產生可驗收的計畫。** Planner 根據需求與現有程式碼，寫出修改範圍、設計、驗收標準與測試方式；此階段不修改產品程式。計畫仍有未決事項時，回到需求釐清。
+
+**3. Build：實作並提交候選。** Builder 依計畫修改、補上必要測試，提交包含新增檔案的完整變更。產出為候選 commit SHA、變更摘要與證據路徑；尚未完成時不進入交付。
+
+Build 與 Verify 是兩個階段，但由同一個 Builder 執行，方便保留修改脈絡。Reviewer 則使用新的 context，直接檢查候選與證據。文章中的角色是責任分工，不代表必須同時開四個 Agent，或為每一步建立新的 Session。
+
+**4. Verify：驗證固定版本。** 原 Builder 對固定 SHA 執行專案要求的檢查，記錄命令、環境、退出碼與結果。若失敗，回到 Build；若驗證中改了程式，就必須重新固定候選與驗證。
+
+**5. Review：獨立檢查候選。** Reviewer 使用新的 context，讀取原需求、計畫、實際 diff 與測試證據；可用時選不同模型家族。發現問題後交回原 Builder 修正，再重新 Verify 與 Review。
+
+**6. Publish：讀回交付結果。** Coordinator 確認驗收通過、阻斷問題已處理，推送已驗證的 SHA，建立或重用 Draft PR，再讀回 base、head、draft 狀態與 SHA。預設到此結束，留下未合併的 PR。
+
+![候選驗證與審查 loop：階段的指令來源、交接產物與修正返回路徑](images/04-candidate-review-loop.png)
+
+*交付圖：每一步交回 SHA、文件或證據；修正後須重新驗證、審查。這是 Skill 交接契約，沒有獨立的 `verify()`／`review()` 工作流引擎。*
+
+## 五、進度與失敗怎麼處理？
+
+這裡有兩份用途不同的紀錄。判斷是否能接續時，要把紀錄與外部實況一起看：文件寫了「已建立 PR」，就讀回該 PR；寫了「驗證通過」，就檢查它對應的 SHA。只有階段名稱，無法判斷工作是否真的完成。
+
+**`progress.md` 保存工程工作的進度。** 由 Coordinator 維護，放在穩定 checkout 下、被 Git 忽略的 draft 目錄，記錄需求、階段、Session、候選 SHA、驗證與審查證據，以及 PR 回執。重新開啟對話時，先讀這份紀錄，再核對 Git、Paseo 與 GitHub 的實際狀態。
+
+計畫與證據保留在穩定的 draft 目錄，而不是只留在臨時 worktree 或聊天內容中。這樣即使原對話中斷，仍能找回原始需求、已做的修改與下一步；重新開對話前也應先確認原 Session 是否仍在執行。
+
+例如 Reviewer 發現新增的輸入驗證漏了一個邊界條件：Coordinator 記錄 finding，交回原 Builder。修正產生新 SHA 後，舊測試結果不能直接當作新候選的通過證據，必須重新驗證並交給 Reviewer 複查。
+
+**`active.json` 保存接件器目前派出的票。** 它在派工前先寫入意圖；若成功取得 Session ID，再更新紀錄。假設 `paseo run` timeout，遠端 Agent 可能已建立，紀錄會保留為 `dispatch-unknown`。此時先到 Paseo 找原 Session，核對結果後再 reconcile，避免直接重送。
+
+接件器不會自動判斷 PR 已完成。必須由人核對目前票的結果，再使用 `cmdReconcile()` 對應的 `reconcile --issue N --confirmed` 命令：`--agent ID` 只補回執；`--done` 才刪除 active 紀錄。Ctrl+C 停止的是後續輪詢，已派到 Paseo 的 Session 仍可能繼續執行。
+
+![派工紀錄的狀態轉換：dispatch-unknown、dispatched、人工核對與 active 清除](images/03-dispatch-recovery.png)
+
+*恢復圖：回執不明先找原 Session；人工解除 active 只影響接件器，沒有自動完成通知。*
+
+這裡有一個原型限制：`--done` 不會推進 boundary 或記錄 completed Issue。下一輪仍重新選票；原票若仍開放且符合條件，可能再次被選到。不能把清除 active 描述成「保證接下一張」。`progress.md` 與 `active.json` 之間也沒有自動同步介面。
+
+## 六、怎麼開始與目前限制
+
+第一次試跑可選擇一張範圍小、容易人工比對的文件修正 Issue。先看計畫是否對應需求，再核對實際 diff 和 PR head SHA；如果 Agent 只回覆「完成」，但沒有交付證據，就把缺少的項目列為未完成。
+
+先準備可用的 Paseo、已登入的 Coding Agent，以及對目標 repository 有適當權限的 `gh`。在目標專案中安裝：
 
 ```bash
 npx skills add wahengchang/agentic-engineering-skills \
   --skill agentic-issue-delivery
 ```
 
-或在下載並解壓專案後，用本地路徑安裝：
+選擇你在 Paseo 中實際使用的 Agent，再手動指定一張小型 Issue：
 
-```bash
-npx skills add ./agentic-engineering-skills \
-  --skill agentic-issue-delivery
-```
+> 使用 `agentic-issue-delivery` 處理這張 Issue：
+> https://github.com/example-org/demo-app/issues/42
+> 核對需求與現有工作後，依 Plan、Build、Verify、Review 執行。不要部署或合併；最後交回 Draft PR、候選 SHA，以及進度和驗證證據的位置。
 
-`npx skills add` 負責讓指定 Coding Agent 看得到 Skill；**不是讓 Paseo 在背後自動接單**。安裝時請選擇你實際透過 Paseo 使用的 Agent，並確認該 Agent 的 Skill 目錄與選項。Paseo 與 Coding Agent 應在能讀取同一份專案的主機上。
+上面的 Issue URL 是示例，請換成自己的票。先檢查實際 diff、驗證結果與審查報告，再決定下一步。接件器的初始化、Git 忽略設定與恢復命令，見 [操作文件](https://github.com/wahengchang/agentic-engineering-skills/blob/main/skills/agentic-issue-delivery/scripts/README.md)。
 
-然後，在 Paseo 裡對你的 Agent 下這個指令（把範例換成自己的 Issue）：
+如果之後要開啟自動接件，先依操作文件設定 Git 忽略路徑，核對指定作者、初始化邊界、Workspace 與 provider，再用測試 repository 觀察派工與人工解除 active 紀錄的行為。接件頻率與執行權限應在確認環境後設定。
 
-> 使用 `agentic-issue-delivery` 處理 [https://github.com/example-org/demo-app/issues/42](https://github.com/example-org/demo-app/issues/42)。先規劃與核對驗收標準，再實作、驗證固定候選、安排獨立審查；不要部署，不要自動合併，最後交回 Draft PR 與進度／證據路徑。已存在的 workspace、PR 和修改要先核對，不要重建。
+目前九項測試涵蓋離線的篩選、單票阻擋、時間間隔與權限模式判斷。公開版接件器尚未完成真實 Paseo → GitHub 的端到端驗收，CLI 參數與回應格式也需對照安裝版本確認。安裝成功後，仍需在自己的環境驗證整個工作流程。
 
-**第一次使用的成功標準**不是「AI 回答完成」，而是你能看到：固定候選 SHA、實際跑過的檢查、Reviewer 的 finding／處置、可讀回的 Draft PR，以及能接續的 `progress.md`。缺一項就明確指出缺口。
-
-## 四、想要像「值班主管」一樣自動接 Issue？這是另一個可選層
-
-上面是手動模式。進一步，你可以打開專案附帶的**前景 Issue 接件器**。它在 Terminal 前景運作，預設每 10 分鐘查看新票；沒票時只查 GitHub，不需要叫醒 AI。
-
-它的概念很簡單：
-
-**GitHub Issue → deterministic filtering → Paseo Coordinator → 角色工作流。**
-
-這裡有幾個刻意的限制：只接初始化 boundary 之後的新 Issue；預設只看指定作者與確切的 `paseo` label；同時處理一張票；結果不明不直接重送。關閉 Terminal 或 Ctrl+C 會停止後續接件，但**已交給 Paseo 的工作不會因此自動被取消**。
-
-公開版原型的操作入口如下；命令中的 ID 與 provider 必須在你自己的 Paseo 環境中查到，**不能照抄佔位值執行**。以下指令是在 Skill 安裝到 `.agents/skills/` 的情況下使用：
-
-```bash
-# 先在目標 repository 的 .gitignore 加入：
-# /.local/agentic-issue/
-# /draft_agentic-issue-*/
-
-# 初始化並設定要派工的 Paseo workspace / provider
-node .agents/skills/agentic-issue-delivery/scripts/issue-intake.mjs init \
-  --workspace <WORKSPACE_ID> \
-  --provider <DISCOVERED_PROVIDER/MODEL> \
-  --mode auto-review
-
-# 先讀回設定與接件邊界
-node .agents/skills/agentic-issue-delivery/scripts/issue-intake.mjs status
-
-# 啟動前景接件；Ctrl+C 停止
-node .agents/skills/agentic-issue-delivery/scripts/issue-intake.mjs start --every 10m
-```
-
-它不是「安裝完就 24/7 自動寫完整專案」的服務。公開原型仍需你確認 workspace、provider、實際 Paseo CLI 參數，以及遇到 dispatch 回執不明時的人工作業；**它不會自己替你驗證所有遠端結果並解開下一張票**。第一次先用 sandbox repo 與低權限設定測試比較合理。
-
-如果你暫時不想管 daemon，完全可以跳過本節。**Skill 的主價值仍然是把一張票從需求帶到可審查的 PR。**
-
-## 五、四輪 PR，真正教會我的四件事
-
-### 1. 工程流程要有「唯一負責人」
-
-我原本以為多 Agent 的關鍵是多開幾個 Session。後來發現，問題更常出在誰都能改、誰都能派工、誰都能宣布完成。
-
-所以我讓 Coordinator 成為唯一的 `progress` 與發布 owner，Builder 成為唯一的產品程式寫入者，Reviewer 只能寫審查報告。這不是降低 AI 能力，而是降低衝突。
-
-![Plan、Build、Verify、Review 與交接](images/04-roles-and-gates.png)
-
-### 2. 「沒收到回覆」不等於「沒成功」
-
-假設 `paseo run` 其實建立了 Agent，但網路剛好斷線。直接 retry 可能再造一個 Agent，甚至第二個 PR。
-
-因此流程先記錄 **intent（準備做什麼）**，再確認 **receipt（實際發生什麼）**；如果中間不明，先到 Paseo／GitHub 查原資源，再決定是否重送。這個原則對 Agent 自動化尤其重要：**Reconcile before retry.**
-
-### 3. 測試結果必須綁定「哪個版本」
-
-`Tests passed` 不是結論。要知道通過的 commit SHA、工作樹狀態、實際執行的命令與環境。候選更新後，就要重新判定舊證據是否失效；不能拿上一版的綠燈合併下一版。
-
-所以 Verify 是獨立的一道關卡，Reviewer 也必須直接看 Issue、diff 與測試證據，而不只是信 Builder 的自述。
-
-### 4. 「可用」和「已經在所有環境驗證」不同
-
-把一個資料夾複製到新 repo，常常會發現它還依賴舊專案的 npm script、隱藏設定或別的文件。這也是為什麼我後來將 `SKILL.md`、動作指令、參考文件、接件工具、測試與手冊一起封裝。
-
-但可攜性測試不能代替真實運行：原始迭代曾有特定整合測試失敗；這份公開版的可選接件工具目前只完成離線測試。**我不會把可安裝說成已經無人值守驗收成功。**
-
-## 六、為什麼最終交回 Draft PR，而不是直接 Merge？
-
-因為「能執行」和「應該執行」是兩件事。Agent 也許能用高權限模式直接改檔、跑命令，但 Prompt 裡規定的角色界線**不是 OS sandbox**。`paseo` label 表示接件意向，不能被誤讀成合併許可。
-
-因此公開版預設：完成規劃、實作、固定版本驗證、獨立審查，然後留下**未合併的 Draft PR**。只有另有明確授權、確認低風險、沒有阻斷 finding、base/head 正確且 repository protection 允許時，才考慮合併。
-
-![接件、權限與 PR 出口的不同閘門](images/05-permissions-and-exits.png)
-
-這和 Paseo 的定位並不衝突。Paseo 可以讓你在桌面／手機看到 Agent 與工作進度；Skill 負責告訴 Agent：**哪些事情即使做得到，也不應在條件不足時逕自完成。**
-
-## 七、如果你也用 Paseo，我會建議這樣試
-
-第一天先不要追求全自動。找一個可回滾、沒有部署風險的 Repo，開一張小型文件或 UI 修正 Issue；安裝 Skill，手動指定 Issue；觀察它是否真的先規劃、完整提交、驗證固定 SHA、給出 Reviewer finding，以及交回 Draft PR。**這是最能看見流程價值的第一個實驗。**
-
-第二步才試前景接件器。用一個測試 Repo，新開一張 boundary 之後、加上 `paseo` label 的票；先核對 scope，再啟動 Terminal。觀察空佇列、接單、Ctrl+C 和恢復。不要一開始就授權高權限模式、自動合併或真實部署。
-
-這不是要把人從工程裡移走。它比較像是替 Paseo 裝上了一位**不會忘記驗收標準、懂得交接、願意說「目前不能算完成」的工程主管**。
-
-Coding Agent 負責寫，Paseo 負責讓它們在正確的地方工作；這套 Skill 負責定義**怎麼合作、怎麼證明成果、何時可以交付**。
-
-**你不一定需要更多 Agent。你可能更需要一套可以拿來用的工程流程。**
-
----
-
-**讀者資源**
-
-- **Skill 專案**：[wahengchang/agentic-engineering-skills](https://github.com/wahengchang/agentic-engineering-skills)
-- [Paseo Getting Started](https://paseo.sh/docs)
-- [Paseo Workspaces / Worktrees](https://paseo.sh/docs/worktrees)
-- [Paseo Orchestration Skills](https://paseo.sh/docs/skills)
-- [Paseo CLI Reference](https://paseo.sh/docs/cli)
-- [Agent Skills CLI: `npx skills add`](https://github.com/vercel-labs/skills/blob/main/docs/commands.md)
-
-*本文圖片為概念示意，不是 Paseo 應用程式截圖。文章使用去識別化示例，未公開原專案 Issue 內容、個人帳號、Paseo host、實際 session ID 或運行 log。*
+函數的輸入／回傳形狀、完整 CLI 參數與各階段交接介面，見 [介面與 loop 說明](engineering-interfaces.zh-TW.md)。

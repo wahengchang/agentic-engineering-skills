@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1330" viewBox="0 0 1100 1330" role="img" aria-label="接件 loop：每一輪做什麼">
+<title>接件 loop：每一輪做什麼</title>
+<rect width="1100" height="1330" fill="white"/>
+<text x="48" y="42" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="18" font-weight="600" fill="#2457c5">02  /  程式控制流程</text>
+<text x="48" y="91" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="36" font-weight="600" fill="#202b3b">接件 loop：每一輪做什麼</text>
+<text x="48" y="137" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">start 取得單一 owner lock；只有 dispatch 分支會啟動 Agent。</text>
+<line x1="48" y1="170" x2="1052" y2="170" stroke="#c7d0dd" stroke-width="1.4" />
+<rect x="285" y="215" width="530" height="116" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="307" y="247" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#202b3b">main() → start</text>
+<text x="307" y="281" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">readConfig() / parseDuration()</text>
+<text x="307" y="313" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">withAsyncLock() → owner.lock</text>
+<polyline points="550,331 550,392" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="550,392 554.8,382.0 545.2,382.0" fill="#2457c5"/>
+<rect x="285" y="392" width="530" height="116" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="307" y="424" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#202b3b">dispatchOnce(config)</text>
+<text x="307" y="458" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">先確認 repo，再查詢 Issues</text>
+<text x="307" y="490" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">assertRepo() → fetchIssues()</text>
+<polyline points="550,508 550,565" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="550,565 554.8,555.0 545.2,555.0" fill="#2457c5"/>
+<rect x="285" y="565" width="530" height="116" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="307" y="597" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">chooseIssue(input)</text>
+<text x="307" y="631" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">檢查 active、boundary、author、label</text>
+<text x="307" y="663" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">kind: busy | idle | dispatch</text>
+<polyline points="410,681 410,726 230,726 230,778" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="230,778 234.8,768.0 225.2,768.0" fill="#2457c5"/>
+<polyline points="690,681 690,726 880,726 880,778" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" />
+<polygon points="880,778 884.8,768.0 875.2,768.0" fill="#566477"/>
+<text x="285" y="713" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#2457c5">dispatch</text>
+<text x="740" y="713" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#566477">idle / busy</text>
+<rect x="55" y="778" width="350" height="116" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="77" y="810" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#202b3b">派出一張 Issue</text>
+<text x="77" y="844" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">先記 intent，再呼叫 Paseo</text>
+<text x="77" y="876" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">writeAtomic() → call()</text>
+<rect x="705" y="778" width="350" height="116" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="727" y="810" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#202b3b">本輪不派工</text>
+<text x="727" y="844" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">busy：有 active</text>
+<text x="727" y="878" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">idle：無合格票</text>
+<polyline points="230,894 230,941 420,941 420,985" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="420,985 424.8,975.0 415.2,975.0" fill="#2457c5"/>
+<polyline points="880,894 880,941 680,941 680,985" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" />
+<polygon points="680,985 684.8,975.0 675.2,975.0" fill="#566477"/>
+<rect x="285" y="985" width="530" height="102" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="307" y="1017" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#202b3b">輸出結果，再等待 interval</text>
+<text x="307" y="1051" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">預設 10m；running=false 時停止等待</text>
+<polyline points="285,1035 25,1035 25,450 285,450" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="285,450 275.0,445.2 275.0,454.8" fill="#2457c5"/>
+<text x="155" y="555" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#2457c5">running=true</text>
+<polyline points="815,1035 980,1035 980,1145 815,1145" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" />
+<polygon points="815,1145 825.0,1149.8 825.0,1140.2" fill="#566477"/>
+<rect x="285" y="1120" width="530" height="80" rx="5" fill="white" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="307" y="1152" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#202b3b">停止 loop／釋放 owner.lock</text>
+<text x="307" y="1186" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">SIGINT / SIGTERM → running=false</text>
+<text x="843" y="1011" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#566477">false</text>
+<line x1="48" y1="1235" x2="1052" y2="1235" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="48" y="1268" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#566477">assertRepo()／fetchIssues() 拋錯會退出 loop；停止輪詢不會取消已派出的 Session。</text>
+<text x="48" y="1301" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="18" font-weight="400" fill="#566477">issue-intake.mjs:57–79, 120–143</text>
+</svg>

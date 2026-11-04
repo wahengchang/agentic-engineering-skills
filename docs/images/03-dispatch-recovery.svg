@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1240" viewBox="0 0 1100 1240" role="img" aria-label="派工狀態：回執不明時先核對">
+<title>派工狀態：回執不明時先核對</title>
+<rect width="1100" height="1240" fill="white"/>
+<text x="48" y="42" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="18" font-weight="600" fill="#2457c5">03  /  狀態轉換</text>
+<text x="48" y="91" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="36" font-weight="600" fill="#202b3b">派工狀態：回執不明時先核對</text>
+<text x="48" y="137" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">active.json 是單票阻擋紀錄；不是已完成 Issue 的去重清單。</text>
+<line x1="48" y1="170" x2="1052" y2="170" stroke="#c7d0dd" stroke-width="1.4" />
+<rect x="300" y="215" width="500" height="92" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="322" y="247" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">無 active.json</text>
+<text x="322" y="281" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">下一輪可以重新選票</text>
+<polyline points="550,307 550,390" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="550,390 554.8,380.0 545.2,380.0" fill="#2457c5"/>
+<text x="65" y="348" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">writeAtomic(activeFile, intent)</text>
+<rect x="250" y="390" width="550" height="120" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="272" y="422" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">dispatch-unknown</text>
+<text x="272" y="456" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">先寫 intent，再嘗試遠端派工</text>
+<text x="272" y="488" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">issue / issueUrl / state / createdAt</text>
+<polyline points="800,465 855,465 855,500 800,500" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" />
+<polygon points="800,500 810.0,504.8 810.0,495.2" fill="#566477"/>
+<text x="875" y="470" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">timeout／</text>
+<text x="875" y="502" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">無法解析 ID</text>
+<polyline points="410,510 410,740" fill="none" stroke="#2457c5" stroke-width="2" stroke-linejoin="round" />
+<polygon points="410,740 414.8,730.0 405.2,730.0" fill="#2457c5"/>
+<text x="65" y="587" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">自動：解析 agentId</text>
+<polyline points="655,510 655,740" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 6"/>
+<polygon points="655,740 659.8,730.0 650.2,730.0" fill="#566477"/>
+<text x="680" y="587" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">人工：先查原 Session</text>
+<text x="680" y="622" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="18" font-weight="400" fill="#202b3b">reconcile --agent ID</text>
+<text x="680" y="650" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="18" font-weight="400" fill="#202b3b">          --confirmed</text>
+<rect x="250" y="740" width="550" height="120" rx="5" fill="#f5f8fc" stroke="#2457c5" stroke-width="1.4" />
+<text x="272" y="772" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="26" font-weight="600" fill="#2457c5">dispatched</text>
+<text x="272" y="806" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#566477">回執已記錄；仍阻擋後續派工</text>
+<text x="272" y="838" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#202b3b">原 intent + agentId</text>
+<polyline points="800,415 1040,415" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 6"/>
+<polyline points="800,800 1040,800 1040,260 800,260" fill="none" stroke="#566477" stroke-width="2" stroke-linejoin="round" stroke-dasharray="7 6"/>
+<polygon points="800,260 810.0,264.8 810.0,255.2" fill="#566477"/>
+<text x="830" y="315" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="20" font-weight="400" fill="#202b3b">人工核對後解除</text>
+<text x="830" y="349" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="17" font-weight="400" fill="#202b3b">--done --confirmed</text>
+<rect x="48" y="940" width="1004" height="160" rx="5" fill="#f5f8fc" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="72" y="973" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="24" font-weight="400" fill="#202b3b">下一輪仍會呼叫 chooseIssue()，不會自動跳到「下一張」。</text>
+<text x="72" y="1017" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#202b3b">--done 僅刪除 active.json；未推進 boundary，也未保存 completed IDs。</text>
+<text x="72" y="1060" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="22" font-weight="400" fill="#202b3b">原 Issue 若仍 OPEN 且符合條件，可能再次 dispatch。</text>
+<line x1="48" y1="1145" x2="1052" y2="1145" stroke="#c7d0dd" stroke-width="1.4" />
+<text x="48" y="1178" dominant-baseline="central" text-anchor="start" font-family="PingFang TC, sans-serif" font-size="21" font-weight="400" fill="#566477">--agent 只補回執，不代表完成；沒有可靠回執時保留 active，避免盲目重送。</text>
+<text x="48" y="1211" dominant-baseline="central" text-anchor="start" font-family="Menlo, PingFang TC, sans-serif" font-size="18" font-weight="400" fill="#566477">issue-intake.mjs:62–79, 108–118; intake-lib.mjs:2–12</text>
+</svg>

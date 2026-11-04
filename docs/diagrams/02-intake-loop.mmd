@@ -1,0 +1,9 @@
+flowchart TD
+    M[main start: readConfig / parseDuration / withAsyncLock] --> D[dispatchOnce: assertRepo → fetchIssues]
+    D --> C[chooseIssue input]
+    C -->|dispatch| P[writeAtomic intent → call Paseo]
+    C -->|idle or busy| N[不派工]
+    P --> W[jsonOut result / 等待 interval]
+    N --> W
+    W -->|running=true| D
+    W -->|false| S[釋放 owner.lock / 停止]
